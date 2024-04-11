@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0">
+  <bpmn:process id="TravelPlanProcessXOR" name="Travel Plan Process" isExecutable="true">
+    <bpmn:documentation># Planning a Trip
+
+![Planning a Trip](https://www.ytravelblog.com/wp-content/uploads/2018/11/planning-a-trip-tips-and-challenges-2.jpg)
+
+**Planning a trip can feel like both the most exciting AND the most overwhelming part of travel.**
+Sure, creating a Pinterest board full of gorgeous pictures is fun, but then you start trying to figure out the actual logistics and it hits you … oh god, this is SO MUCH WORK. Cue panic attacks. *Wow, I totally just described our wedding planning process, too. Anyone else?*
+
+
+But planning a trip doesn’t have to be the source of constant anxiety and overwhelm! Through the years, I’ve perfected my trip planning process, and I’ve got it down to a fine science.
+
+
+Er, well, maybe not a science, but sort of like a general step-by-step outline.  
+**Breaking down each of the steps to planning a trip helps me cut through the confusion and tackle stuff in a practical, down to earth way.** 
+
+
+
+So, this travel plan process aids you in this mission and consists of the following tasks:
+
+1. Buy **Flight** Tickets
+1. Book a **Hotel**
+1. Rent a **Car**</bpmn:documentation>
+    <bpmn:startEvent id="StartEvent_1" name="Start&#10;Form">
+      <bpmn:documentation>Domain fields updated:
+- businessKey
+- originCity
+- destinCity
+- initialDate
+- endDate
+- travelPlan.status = PENDING</bpmn:documentation>
+      <bpmn:outgoing>SequenceFlow_125v9sm</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="TaskCar" name="Rent a car">
+      <bpmn:documentation># Renting a car
+
+
+Many folks might pack up their own car for such an adventure. But if you want to save on mileage, or simply secure a vehicle that’s bigger or better than your own, you might consider a rental instead. Here are 10 things to do whenever you rent a car to ensure you get the best deal, earn bonus points or cash back when possible, and are protected if things go wrong.
+
+
+1. Avoid airport locations
+1. Comparison shop
+1. Check the details
+1. Score bonuses and discounts through partnerships
+1. Hit the gas on credit card category bonuses
+1. Ensure you’re insured
+1. Think about roadside assistance</bpmn:documentation>
+      <bpmn:incoming>Flow_1o2e6oo</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0mapilh</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1x9cyv3" name="Process completed">
+      <bpmn:incoming>Flow_01dlia4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0mapilh" sourceRef="TaskCar" targetRef="Gateway_0sv7u4u" />
+    <bpmn:userTask id="TaskFlight" name="Buy flight tickets">
+      <bpmn:documentation># Buying the Flight Tickets
+
+
+Airfare can easily be the largest expense of your trip. Expensive plane tickets mean you need to choose a more affordable destination or spend less money at your vacation stop to stay within your spending limit. If the idea of booking cheap flights sounds appealing to you, these 10 tips will help your air travel become more reasonable.
+
+
+1. Book Early for Cheap Flights
+1. Set Price Alerts
+1. Be Flexible
+1. Book a Connecting Flight
+1. Consider Discount Airlines
+1. Use More Than One Travel Portal
+1. Browse Airline Specials
+1. Use an Airline Credit Card to Avoid Baggage Fees
+1. Use Award Miles
+1. Use Your Credit Card Travel Credits</bpmn:documentation>
+      <bpmn:incoming>SequenceFlow_125v9sm</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1o5n6g7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_125v9sm" sourceRef="StartEvent_1" targetRef="TaskFlight" />
+    <bpmn:userTask id="TaskHotel" name="Book a hotel">
+      <bpmn:documentation># Booking your accommodation
+
+
+There are tricks and tips you can use to find the best room rates so you can enjoy your trip guilt-free.
+
+
+1. Look into business hotels.
+1. Ask for a corner room.
+1. Check in near the end of the day.
+1. Bundle your hotel and flight booking.
+1. Sign up for a hotel's loyalty programs.
+1. Sign up for alerts on price drops.
+1. Use coupon codes.</bpmn:documentation>
+      <bpmn:incoming>Flow_0cqxc73</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1m0sj2x</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="SequenceFlow_1o5n6g7" sourceRef="TaskFlight" targetRef="Gateway_17py60n" />
+    <bpmn:sequenceFlow id="SequenceFlow_1m0sj2x" sourceRef="TaskHotel" targetRef="Gateway_1eeovkh" />
+    <bpmn:exclusiveGateway id="Gateway_0a1mz5n" name="Rent a&#10;car?">
+      <bpmn:incoming>Flow_08yw817</bpmn:incoming>
+      <bpmn:outgoing>Flow_1o2e6oo</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18hhpc8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1o2e6oo" name="Yes" sourceRef="Gateway_0a1mz5n" targetRef="TaskCar">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processInstance.travelPlan.rentCar == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_0sv7u4u">
+      <bpmn:incoming>SequenceFlow_0mapilh</bpmn:incoming>
+      <bpmn:incoming>Flow_18hhpc8</bpmn:incoming>
+      <bpmn:outgoing>Flow_01dlia4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_01dlia4" sourceRef="Gateway_0sv7u4u" targetRef="EndEvent_1x9cyv3" />
+    <bpmn:sequenceFlow id="Flow_18hhpc8" name="No" sourceRef="Gateway_0a1mz5n" targetRef="Gateway_0sv7u4u">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processInstance.travelPlan.rentCar == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_17py60n" name="Book a &#10;hotel?">
+      <bpmn:incoming>SequenceFlow_1o5n6g7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cqxc73</bpmn:outgoing>
+      <bpmn:outgoing>Flow_05rrgpu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0cqxc73" name="Yes" sourceRef="Gateway_17py60n" targetRef="TaskHotel">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processInstance.travelPlan.bookHotel == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1eeovkh">
+      <bpmn:incoming>SequenceFlow_1m0sj2x</bpmn:incoming>
+      <bpmn:incoming>Flow_05rrgpu</bpmn:incoming>
+      <bpmn:outgoing>Flow_08yw817</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_08yw817" sourceRef="Gateway_1eeovkh" targetRef="Gateway_0a1mz5n" />
+    <bpmn:sequenceFlow id="Flow_05rrgpu" name="No" sourceRef="Gateway_17py60n" targetRef="Gateway_1eeovkh">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${processInstance.travelPlan.bookHotel == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:textAnnotation id="TextAnnotation_1ggcoxe">
+      <bpmn:text>#TravelPlan Entity
+
+name: String
+startDate: LocalDate
+endDate: LocalDate
+bookHotel : Boolean
+rentCar: Boolean
+hotelName: String
+hotelBookingNumber: String
+airlineCompanyName: String
+airlineTicketNumber: String
+carCompanyName: String
+carBookingNumber: String</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_0thqbmv">
+      <bpmn:text>##UserTask Form RentCar
+
+name: String, readonly
+startDate: LocalDate, readonly
+endDate: LocalDate, readonly
+rentCar: Boolean, readonly
+carCompanyName: String
+carBookingNumber: String</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_01e2z4p" sourceRef="TaskCar" targetRef="TextAnnotation_0thqbmv" />
+    <bpmn:textAnnotation id="TextAnnotation_0e55e1x">
+      <bpmn:text>##UserTask Form BookHotel
+
+name: String, readonly
+startDate: LocalDate, readonly
+endDate: LocalDate, readonly
+bookHotel : Boolean, readonly
+hotelName: String
+hotelBookingNumber: String</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_01dfk76" sourceRef="TaskHotel" targetRef="TextAnnotation_0e55e1x" />
+    <bpmn:textAnnotation id="TextAnnotation_1e1c5ak">
+      <bpmn:text>##UserTask Form BuyTickets
+
+name: String , readonly
+startDate: LocalDate , readonly
+endDate: LocalDate, readonly
+bookHotel : Boolean, readonly
+rentCar: Boolean, readonly
+airlineCompanyName: String
+airlineTicketNumber: String</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1kn91ig" sourceRef="TaskFlight" targetRef="TextAnnotation_1e1c5ak" />
+    <bpmn:textAnnotation id="TextAnnotation_1bw9nbb">
+      <bpmn:text>##StartForm Entity
+
+name: String
+startDate: LocalDate
+endDate: LocalDate
+bookHotel : Boolean
+rentCar: Boolean</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_15uk27g" sourceRef="StartEvent_1" targetRef="TextAnnotation_1bw9nbb" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TravelPlanProcessXOR">
+      <bpmndi:BPMNEdge id="Flow_05rrgpu_di" bpmnElement="Flow_05rrgpu">
+        <di:waypoint x="404" y="375" />
+        <di:waypoint x="404" y="430" />
+        <di:waypoint x="624" y="430" />
+        <di:waypoint x="624" y="375" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="438" y="412" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08yw817_di" bpmnElement="Flow_08yw817">
+        <di:waypoint x="649" y="350" />
+        <di:waypoint x="686" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cqxc73_di" bpmnElement="Flow_0cqxc73">
+        <di:waypoint x="429" y="350" />
+        <di:waypoint x="474" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="437" y="332" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18hhpc8_di" bpmnElement="Flow_18hhpc8">
+        <di:waypoint x="711" y="375" />
+        <di:waypoint x="711" y="430" />
+        <di:waypoint x="931" y="430" />
+        <di:waypoint x="931" y="375" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="743" y="412" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01dlia4_di" bpmnElement="Flow_01dlia4">
+        <di:waypoint x="956" y="350" />
+        <di:waypoint x="985" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o2e6oo_di" bpmnElement="Flow_1o2e6oo">
+        <di:waypoint x="736" y="350" />
+        <di:waypoint x="781" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="742" y="332" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1m0sj2x_di" bpmnElement="SequenceFlow_1m0sj2x">
+        <di:waypoint x="574" y="350" />
+        <di:waypoint x="599" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="597" y="124" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1o5n6g7_di" bpmnElement="SequenceFlow_1o5n6g7">
+        <di:waypoint x="320" y="350" />
+        <di:waypoint x="379" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="374" y="124" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_125v9sm_di" bpmnElement="SequenceFlow_125v9sm">
+        <di:waypoint x="188" y="350" />
+        <di:waypoint x="220" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="162" y="134" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0mapilh_di" bpmnElement="SequenceFlow_0mapilh">
+        <di:waypoint x="881" y="350" />
+        <di:waypoint x="906" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="810" y="134" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="157" y="375" width="26" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_09smfnk_di" bpmnElement="TaskCar">
+        <dc:Bounds x="781" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1x9cyv3_di" bpmnElement="EndEvent_1x9cyv3">
+        <dc:Bounds x="985" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="978" y="375" width="51" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_0exhugw_di" bpmnElement="TaskFlight">
+        <dc:Bounds x="220" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UserTask_1v2u5s7_di" bpmnElement="TaskHotel">
+        <dc:Bounds x="474" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0a1mz5n_di" bpmnElement="Gateway_0a1mz5n" isMarkerVisible="true">
+        <dc:Bounds x="686" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="664" y="316" width="33" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0sv7u4u_di" bpmnElement="Gateway_0sv7u4u" isMarkerVisible="true">
+        <dc:Bounds x="906" y="325" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_17py60n_di" bpmnElement="Gateway_17py60n" isMarkerVisible="true">
+        <dc:Bounds x="379" y="325" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="345" y="316" width="38" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1eeovkh_di" bpmnElement="Gateway_1eeovkh" isMarkerVisible="true">
+        <dc:Bounds x="599" y="325" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1ggcoxe_di" bpmnElement="TextAnnotation_1ggcoxe" bioc:stroke="rgb(30, 136, 229)" bioc:fill="rgb(187, 222, 251)">
+        <dc:Bounds x="140" y="510" width="200" height="194" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0thqbmv_di" bpmnElement="TextAnnotation_0thqbmv" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="802" y="109" width="200" height="124" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0e55e1x_di" bpmnElement="TextAnnotation_0e55e1x" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="540" y="109" width="220" height="124" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1e1c5ak_di" bpmnElement="TextAnnotation_1e1c5ak" bioc:stroke="rgb(142, 36, 170)" bioc:fill="rgb(225, 190, 231)">
+        <dc:Bounds x="320" y="102" width="195" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1bw9nbb_di" bpmnElement="TextAnnotation_1bw9nbb" bioc:stroke="rgb(67, 160, 71)" bioc:fill="rgb(200, 230, 201)">
+        <dc:Bounds x="140" y="130" width="140" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_01e2z4p_di" bpmnElement="Association_01e2z4p">
+        <di:waypoint x="844" y="310" />
+        <di:waypoint x="868" y="233" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_01dfk76_di" bpmnElement="Association_01dfk76">
+        <di:waypoint x="551" y="310" />
+        <di:waypoint x="603" y="233" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1kn91ig_di" bpmnElement="Association_1kn91ig">
+        <di:waypoint x="300" y="310" />
+        <di:waypoint x="353" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_15uk27g_di" bpmnElement="Association_15uk27g">
+        <di:waypoint x="172" y="332" />
+        <di:waypoint x="178" y="240" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

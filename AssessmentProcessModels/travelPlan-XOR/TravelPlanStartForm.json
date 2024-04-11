@@ -1,0 +1,37 @@
+{
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "rentCar",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "bookHotel",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [],
+  "entityType": "start-form",
+  "processBpmnId": "TravelPlanProcessXOR",
+  "processEntityName": "TravelPlanProcess",
+  "domainEntityName": "TravelPlan",
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "TravelPlanStartForm",
+  "changelogDate": "20210401000002",
+  "skipFakeData": true
+}

@@ -1,0 +1,4 @@
+30 times
+1 executions: StartEvent_1
+1 executions: StartEvent_1 => TaskFlight => TaskFlight => TaskHotel => TaskHotel => TaskCar => TaskCar
+28 executions: StartEvent_1 => TaskFlight => TaskHotel => TaskCar

@@ -1,0 +1,4 @@
+30 executions of FriendlyShoulderProcess in 173.0 seconds
+23 executions: RequestForm => TaskAcknowledge
+5 executions: RequestForm => TaskAnalyseComplaint
+2 executions: RequestForm => TaskAnalyseComplaint => TaskReviewEscalation

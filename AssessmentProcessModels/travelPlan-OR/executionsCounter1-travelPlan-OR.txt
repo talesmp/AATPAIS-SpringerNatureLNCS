@@ -1,0 +1,5 @@
+30 executions of TravelPlanProcessOR in 238.0 seconds
+10 executions: StartEvent_1 => TaskFlight
+12 executions: StartEvent_1 => TaskFlight => TaskCar
+7 executions: StartEvent_1 => TaskFlight => TaskHotel
+1 executions: StartEvent_1 => TaskFlight => TaskCar => TaskHotel
