@@ -389,8 +389,8 @@ def process_folder_function(process_folder_name, current_directory):
       [Arguments]    ${argRes_description}=${faker-description}    ${argRes_date}=${faker-date}
       [Documentation]  
       Wait Until Page Contains    Create or edit a 
-      Input Text When Element Is Visible    friendly-shoulder-start-form-description    ${argRes_description}
-      Input Text When Element Is Visible    friendly-shoulder-start-form-date    ${argRes_description}
+      Input Text When Element Is Visible    customer-feedback-start-form-description    ${argRes_description}
+      Input Text When Element Is Visible    customer-feedback-start-form-date    ${argRes_description}
     """
     
     for ibed in interactableBpmnElementsDict:
@@ -468,17 +468,17 @@ def process_folder_function(process_folder_name, current_directory):
 #endregion
 
 #region Manual selection of the process folder
-# 18 Friendly Shoulder
-# process_folder_name = 'friendlyShoulder-exclusive-all-types-no-scalation'
-# process_folder_name = 'friendlyShoulder-exclusive-all-types-with-scalation'
-# process_folder_name = 'friendlyShoulder-inclusive-all-types-no-scalation'
-# process_folder_name = 'friendlyShoulder-inclusive-all-types-with-scalation'
-# process_folder_name = 'friendlyShoulder-only-complaint-no-scalation'
-# process_folder_name = 'friendlyShoulder-only-complaint-with-scalation'
-# process_folder_name = 'friendlyShoulder-only-suggestion-compliment'
-# process_folder_name = 'friendlyShoulder-parallel-all-types-no-scalation'
-# process_folder_name = 'friendlyShoulder-parallel-all-types-with-scalation'
-# process_folder_name = 'friendlyShoulder-parallel-all-types-with-scalation'
+# 18 Customer Feedback
+# process_folder_name = 'customerFeedback-exclusive-all-types-no-scalation'
+# process_folder_name = 'customerFeedback-exclusive-all-types-with-scalation'
+# process_folder_name = 'customerFeedback-inclusive-all-types-no-scalation'
+# process_folder_name = 'customerFeedback-inclusive-all-types-with-scalation'
+# process_folder_name = 'customerFeedback-only-complaint-no-scalation'
+# process_folder_name = 'customerFeedback-only-complaint-with-scalation'
+# process_folder_name = 'customerFeedback-only-suggestion-compliment'
+# process_folder_name = 'customerFeedback-parallel-all-types-no-scalation'
+# process_folder_name = 'customerFeedback-parallel-all-types-with-scalation'
+# process_folder_name = 'customerFeedback-parallel-all-types-with-scalation'
 # 12 Travel Plan
 # process_folder_name = 'travelPlan-AND'
 # process_folder_name = 'travelPlan-EMSG'

@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "date",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipName": "babblingCharacterization",
+      "otherEntityName": "babblingCharacterization",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "type"
+    }
+  ],
+  "entityType": "start-form",
+  "processBpmnId": "CustomerFeedbackProcess",
+  "processEntityName": "CustomerFeedbackProcess",
+  "domainEntityName": "CustomerFeedback",
+  "service": "serviceClass",
+  "dto": "mapstruct",
+  "jpaMetamodelFiltering": false,
+  "readOnly": false,
+  "pagination": "no",
+  "name": "CustomerFeedbackStartForm",
+  "changelogDate": "20210401000002",
+  "skipFakeData": true
+}
