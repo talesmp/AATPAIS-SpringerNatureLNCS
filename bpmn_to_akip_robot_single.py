@@ -2,7 +2,6 @@
 
 # Import Libraries
 import os
-import time
 import json
 import xml.etree.ElementTree as ET
 import glob   # `find_files_with_extension` fuctinon
@@ -188,8 +187,10 @@ def process_folder_function(process_folder_name, current_directory):
   robotResourcesFileName = processIdFromBpmn+'_resources.robot'
   with open(process_folder_path+robotTestFileName, 'w') as test, open(process_folder_path+robotResourcesFileName, 'w') as resources:
     # Adding a comment line to document the Prompt Command necessary for the execution of the Test Cases
-    test.write('# Prompt Command to Execute the BlindBatch : \n')
+    test.write('# Prompt Command to Execute the BlindBatch Test Case : \n')
     test.write('# robot -i TC_BlindBatch '+robotTestFileName+'\n')
+    test.write('# Prompt Command to Execute the Planned Test Cases with the tag "planned" : \n')
+    test.write('# robot -i planned '+robotTestFileName+'\n')
     # Settings section
     test.write('*** Settings ***\n')
     test.write('Library    FakerLibrary    #locale=pt_BR \n')
@@ -222,8 +223,9 @@ def process_folder_function(process_folder_name, current_directory):
     ### 10 times batch execution of Blind  ###
     ### Implementation of executed keywords json
     test.write('TC_BlindBatch\n')
+    test.write('    [Tags]  blind \n')
     test.write('    ${kw_executed}=    Create List\n')
-    test.write('    kwFakerDataSetup\n')
+    # test.write('    kwFakerDataSetup\n')
     test.write('    kwLogin\n')
     test.write('    ${start_time}=    Get Time    epoch\n')
     test.write('    FOR    ${i}    IN RANGE    30\n')
@@ -261,34 +263,14 @@ def process_folder_function(process_folder_name, current_directory):
     test.write('    ${output}=  Evaluate  "{} executions of '+processIdFromBpmn+' in {} seconds\\\\n".format(len($data), ${time_spent}) + '+"'\\\\n'.join(["+'"{} executions: {}".format(count, path) for path, count in $execution_counts.items()]) \n')
     test.write('    Create File    '+process_folder_path+'executionsCounter-'+process_folder_name+'.txt    ${output} \n')
     test.write('\n')
-    ### Blind  ###
-    # test.write('TC_Blind\n')
-    # test.write('    kwFakerDataSetup\n')
-    # test.write('    kwLogin\n')
-    # test.write('    kw'+startEventId+'\n')
-    # test.write('    WHILE    $processRunning == True\n')
-    # test.write('        kwFindFirstAvailableTask\n')
-    # for i, userTask in enumerate(filteredUserTasks):
-    #   if i == 0:
-    #       test.write('        IF    $found_task == "'+userTask+'"\n')
-    #   else:
-    #       test.write('        ELSE IF    $found_task == "'+userTask+'"\n')
-    #   test.write('            kwFakerDataSetup\n')
-    #   test.write('            kw'+userTask+'\n')
-    # test.write('        ELSE IF    $found_task == "No task available."\n')
-    # test.write('            ${processRunning}=    Set Variable    ${False}\n')
-    # test.write('            Set Test Variable    ${processRunning}\n')
-    # test.write('            BREAK\n')
-    # test.write('        END\n')
-    # test.write('    END\n')
-    # test.write('\n')
     ## Linear ###
-    # test.write('TC_Linear \n')
-    # test.write('    [Documentation]  Arrange the following Keywords below according to the desired test path:\n')
-    # test.write('    kwFakerDataSetup\n')
-    # test.write('    kwLogin\n')
-    # test.write('    kw'+'\n    # kw'.join(interactableBpmnElementIdsList)+'\n')
-    # test.write('\n')
+    test.write('TC_Planned \n')
+    test.write('    # [Tags]  planned \n')
+    test.write('    [Documentation]  Arrange the following Keywords below according to the desired test path, always interpolating with the kwMyTasks keyword:\n')
+    test.write('    kwLogin\n')
+    test.write('    kwFakerDataSetup\n')
+    test.write('    kw'+'\n    # kwMyTasks \n    # kw'.join(interactableBpmnElementIdsList)+'\n')
+    test.write('\n')
 
     # Keywords section
     test.write('*** Keywords ***\n')
@@ -335,6 +317,10 @@ def process_folder_function(process_folder_name, current_directory):
       if uif[1] == 'Integer':
         test.write('    ${faker-'+uif[0]+'}    FakerLibrary.Random Int  min=1  max=10\n')
         test.write('    Set Test Variable    ${faker-'+uif[0]+'}\n')
+      if uif[1] == 'many-to-one':
+        test.write("    ### The elements for the selectable options should be placed here, with 'blindExecutionSelection' being the default for Blind Execution \n")
+        test.write("    ${faker-"+uif[0]+"}    FakerLibrary.Random Element    elements=['blindExecutionSelection'] \n")
+        test.write('    Set Test Variable    ${faker-'+uif[0]+'}\n')
     test.write('    ${processRunning}=    Set Variable    ${True}\n')
     test.write('    Set Test Variable    ${processRunning}\n')
     test.write('\n')
@@ -342,14 +328,14 @@ def process_folder_function(process_folder_name, current_directory):
     ### Implementing the keywords related to logging in and going to My Tasks
     ### [TEST] ###
     test.write('kwLogin\n')
-    test.write('    [Arguments]  \n')
     test.write('    [Documentation]  \n')
+    test.write('    [Arguments]  \n')
     test.write('    The user logs in\n')
     test.write('\n')
     ### [RESOURCES] ###
     resources.write('The user logs in\n')
-    resources.write('    [Arguments]  \n')
     resources.write('    [Documentation]  \n')
+    resources.write('    [Arguments]  \n')
     resources.write('    Open Available Browser    maximized=true\n')
     resources.write('    Go To    ${url_home}\n')
     resources.write('    Click Element When Visible       account-menu__BV_toggle_\n')
@@ -363,44 +349,38 @@ def process_folder_function(process_folder_name, current_directory):
     resources.write('\n')
     ### [TEST] ###
     test.write('kwMyTasks\n')
-    test.write('    [Arguments]  \n')
     test.write('    [Documentation]  \n')
+    test.write('    [Arguments]  \n')
     test.write('    The user is in MyTasks\n')
     test.write('\n')
     ### [RESOURCES] ###
     resources.write('The user is in MyTasks\n')
-    resources.write('    [Arguments]  \n')
     resources.write('    [Documentation]  \n')
+    resources.write('    [Arguments]  \n')
     resources.write('    Sleep    500ms\n')
     resources.write('    Go To    ${url_my_tasks}\n')
     resources.write('    Wait Until Element Is Visible    task-instance-heading\n')
     resources.write('\n')
 
-    """ Issue 7 Implement Arguments strategies for each interactable field
-
-      kwRequestForm
-      [Arguments]    ${argTest_description}=${faker-description}    ${argTest_date}=${faker-date}
-      [Documentation]  
-      The user is in RequestForm
-      The user fills RequestForm    ${argTest-description}    ${argTest-date}
-      The user submits RequestForm
-
-    The user fills RequestForm
-      [Arguments]    ${argRes_description}=${faker-description}    ${argRes_date}=${faker-date}
-      [Documentation]  
-      Wait Until Page Contains    Create or edit a 
-      Input Text When Element Is Visible    customer-feedback-start-form-description    ${argRes_description}
-      Input Text When Element Is Visible    customer-feedback-start-form-date    ${argRes_description}
-    """
-    
+    ### Implementing the keywords for each intercative BPMN element
     for ibed in interactableBpmnElementsDict:
+      for entry in jsonFilesContentDictList:
+        if entry['bpmnElementId'] == ibed['bpmnElementId']:
+          foundInteractableFields = entry['jsonInteractableFields'] #foundInteractableFields is a list of dictionaries
+          testArgumentsFieldList = []
+          testFillKeywordFieldList =[]
+          resourcesArgumentsFieldList = []
+          for field in foundInteractableFields:
+            testArgumentsFieldList.append('${argTest-'+field['fieldName']+'}=${faker-'+field['fieldName']+'}')
+            testFillKeywordFieldList.append('${argTest-'+field['fieldName']+'}')
+            resourcesArgumentsFieldList.append('${argRes-'+field['fieldName']+'}=${argTest-'+field['fieldName']+'}')
       test.write('kw'+ibed['bpmnElementId']+'\n')
-      test.write('    [Arguments]  \n')
       test.write('    [Documentation]  \n')
+      test.write('    [Arguments]    '+'    '.join(testArgumentsFieldList)+' \n') 
       test.write('    The user is in '+ibed['bpmnElementId']+'\n')
       resources.write('The user is in '+ibed['bpmnElementId']+'\n')
-      resources.write('    [Arguments]  \n')
       resources.write('    [Documentation]  \n')
+      resources.write('    [Arguments]  \n')
       resources.write('    Sleep    500ms  \n')
       if ibed['bpmnElementType'] == 'startEvent': 
         resources.write('    Go To    http://localhost:8080/process-definition/'+processIdFromBpmn+'/init \n')  # Has to be the ID from the BPMN => OK!
@@ -408,52 +388,49 @@ def process_folder_function(process_folder_name, current_directory):
         resources.write('    Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  \n')
         resources.write('    Wait Until Page Contains    '+ibed['bpmnElementId']+'\n')
       resources.write('\n')
-
-      test.write('    The user fills '+ibed['bpmnElementId']+'\n')
-      resources.write('The user fills '+ibed['bpmnElementId']+'\n')
-      resources.write('    [Arguments]  \n')
+      test.write('    The user fills '+ibed['bpmnElementId']+'    '+'    '.join(testFillKeywordFieldList)+' \n') 
+      resources.write('The user fills '+ibed['bpmnElementId']+' \n')
       resources.write('    [Documentation]  \n')
+      resources.write('    [Arguments]    '+'    '.join(resourcesArgumentsFieldList)+' \n') 
       if ibed['bpmnElementType'] == 'startEvent': 
         resources.write("    Wait Until Page Contains    Create or edit a \n")
       elif ibed['bpmnElementType'] == 'userTask': 
         resources.write("    Wait Until Page Contains    "+ibed['bpmnElementId']+" \n")
-      ### using ibed['bpmnElementId'], find the object in jsonFilesContentDictList that has the same 'bpmnElementId' <<<===================================
-      ### for each jsonInteractableFields in the said form, implement the keyword for each fieldType, and the said Faker input
-      ### params(fieldType, locator, fakerData)
-      for entry in jsonFilesContentDictList:
-          if entry['bpmnElementId'] == ibed['bpmnElementId']:
-              foundInteractableFields = entry['jsonInteractableFields']
       for field in foundInteractableFields:
         defFieldType = field['fieldType'] 
         defFieldName = field['fieldName']
         defFieldLocator = field['fieldLocator']
+        matchingFieldLocator = None
+        for first_element, field_locator in fieldLocators:
+          if field_locator == defFieldLocator:
+            matchingFieldLocator = first_element
+            break
         if defFieldType in ('String', 'Integer','LocalDate'):
-          resources.write('    Input Text When Element Is Visible    '+defFieldLocator+'    ${faker-'+defFieldName+'} \n')
-        # elif fieldType=='Integer':
-        #   resources.write('     \n')
-        # elif fieldType=='LocalDate':
-        #   resources.write('     \n')
+          resources.write('    Input Text When Element Is Visible    ${locator-'+matchingFieldLocator+'}    ${argRes-'+defFieldName+'} \n')
         elif defFieldType =='Boolean':
-          resources.write('    IF    ${faker-'+defFieldName+'} is True \n')
-          resources.write('        Wait Until Element Is Visible    '+defFieldLocator+' \n')
-          resources.write('        Select Checkbox    '+defFieldLocator+' \n')
-          resources.write('    ELSE IF    ${faker-'+defFieldName+'} is False \n')
-          resources.write('        Wait Until Element Is Visible    '+defFieldLocator+' \n')
-          resources.write('        Unselect Checkbox    '+defFieldLocator+' \n')
+          resources.write('    IF    ${argRes-'+defFieldName+'} is True \n')
+          resources.write('        Wait Until Element Is Visible    ${locator-'+matchingFieldLocator+'} \n')
+          resources.write('        Select Checkbox    ${locator-'+matchingFieldLocator+'} \n')
+          resources.write('    ELSE IF    ${argRes-'+defFieldName+'} is False \n')
+          resources.write('        Wait Until Element Is Visible    ${locator-'+matchingFieldLocator+'} \n')
+          resources.write('        Unselect Checkbox    ${locator-'+matchingFieldLocator+'} \n')
           resources.write('    END \n')
+        ### Improve the many-to-one selection, for the passing of Arguments is not enabling the selection of a specific option
         elif defFieldType =='many-to-one':
-          resources.write('    Click Element When Visible    '+defFieldLocator+' \n')
-          resources.write("    ${list_options}=    Get WebElements    //select[@id='"+defFieldLocator+"']/option \n")
-          resources.write('    ${options_length}=    Get Length    ${list_options} \n')
-          resources.write('    ${random_index}=    Random Int    1    ${options_length - 1} \n')
-          resources.write('    Select From List By Index    '+defFieldLocator+'    ${random_index} \n')
+          resources.write('    Click Element When Visible    ${locator-'+matchingFieldLocator+'} \n')
+          resources.write("    IF    '${argRes-"+defFieldName+"}'=='blindExecutionSelection'\n")
+          resources.write("        ${list_options}=    Get WebElements    //select[@id='${locator-"+matchingFieldLocator+"}']/option \n")
+          resources.write('        ${options_length}=    Get Length    ${list_options} \n')
+          resources.write('        ${random_index}=    Random Int    1    ${options_length - 1} \n')
+          resources.write('        Select From List By Index    ${locator-'+matchingFieldLocator+'}    ${random_index} \n')
+          resources.write('    ELSE \n')
+          resources.write("        Click Element When Visible     //option[@value='[object Object]'][contains(.,'${argRes-"+defFieldName+"}')]  \n")
+          resources.write('    END \n')
       resources.write('\n')
-
       test.write('    The user submits '+ibed['bpmnElementId']+'\n')
-      ### https://github.com/talesmp/aat4pais/issues/4
       resources.write('The user submits '+ibed['bpmnElementId']+'\n')
-      resources.write('    [Arguments]  \n')
       resources.write('    [Documentation]  \n')
+      resources.write('    [Arguments]  \n')
       resources.write('    Sleep    500ms  \n')
       resources.write('    Capture Page Screenshot  \n')
       if ibed['bpmnElementType'] == 'startEvent': 
@@ -468,17 +445,17 @@ def process_folder_function(process_folder_name, current_directory):
 #endregion
 
 #region Manual selection of the process folder
-# 18 Customer Feedback
-# process_folder_name = 'customerFeedback-exclusive-all-types-no-scalation'
-# process_folder_name = 'customerFeedback-exclusive-all-types-with-scalation'
-# process_folder_name = 'customerFeedback-inclusive-all-types-no-scalation'
-# process_folder_name = 'customerFeedback-inclusive-all-types-with-scalation'
-# process_folder_name = 'customerFeedback-only-complaint-no-scalation'
-# process_folder_name = 'customerFeedback-only-complaint-with-scalation'
+# 18 Friendly Shoulder
+# process_folder_name = 'customerFeedback-exclusive-all-types-no-escalation'
+# process_folder_name = 'customerFeedback-exclusive-all-types-with-escalation'
+# process_folder_name = 'customerFeedback-inclusive-all-types-no-escalation'
+# process_folder_name = 'customerFeedback-inclusive-all-types-with-escalation'
+# process_folder_name = 'customerFeedback-only-complaint-no-escalation'
+# process_folder_name = 'customerFeedback-only-complaint-with-escalation'
 # process_folder_name = 'customerFeedback-only-suggestion-compliment'
-# process_folder_name = 'customerFeedback-parallel-all-types-no-scalation'
-# process_folder_name = 'customerFeedback-parallel-all-types-with-scalation'
-# process_folder_name = 'customerFeedback-parallel-all-types-with-scalation'
+# process_folder_name = 'customerFeedback-parallel-all-types-no-escalation'
+# process_folder_name = 'customerFeedback-parallel-all-types-with-escalation'
+# process_folder_name = 'customerFeedback-parallel-all-types-with-escalation'
 # 12 Travel Plan
 # process_folder_name = 'travelPlan-AND'
 # process_folder_name = 'travelPlan-EMSG'
@@ -488,11 +465,13 @@ def process_folder_function(process_folder_name, current_directory):
 # process_folder_name = 'travelPlan-LOOP'
 # process_folder_name = 'travelPlan-OR'
 # process_folder_name = 'travelPlan-SIMPLE'
+# process_folder_name = 'travelPlan-SIMPLEST'
 # process_folder_name = 'travelPlan-SRV'
 # process_folder_name = 'travelPlan-TIMER'
 # process_folder_name = 'travelPlan-VAL'
 # process_folder_name = 'travelPlan-XOR'
 
+# import time
 # start_time = time.time()
 # current_directory = os.getcwd().replace('\\', '/')
 # process_folder_function(process_folder_name, current_directory)
@@ -502,5 +481,3 @@ def process_folder_function(process_folder_name, current_directory):
 
 
 #endregion
-
-

@@ -15,8 +15,8 @@ ${locator-task-acknowledge-response}    task-acknowledge-response
 
 *** Keywords ***
 The user logs in
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Open Available Browser    maximized=true
     Go To    ${url_home}
     Click Element When Visible       account-menu__BV_toggle_
@@ -29,60 +29,64 @@ The user logs in
     Sleep    500ms
 
 The user is in MyTasks
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms
     Go To    ${url_my_tasks}
     Wait Until Element Is Visible    task-instance-heading
 
 The user is in RequestForm
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Go To    http://localhost:8080/process-definition/CustomerFeedbackProcess/init 
 
-The user fills RequestForm
-    [Arguments]  
+The user fills RequestForm 
     [Documentation]  
+    [Arguments]    ${argRes-description}=${argTest-description}    ${argRes-date}=${argTest-date}    ${argRes-babblingCharacterization.type}=${argTest-babblingCharacterization.type} 
     Wait Until Page Contains    Create or edit a 
-    Input Text When Element Is Visible    customer-feedback-start-form-description    ${faker-description} 
-    Input Text When Element Is Visible    customer-feedback-start-form-date    ${faker-date} 
-    Click Element When Visible    customer-feedback-start-form-babblingCharacterization 
-    ${list_options}=    Get WebElements    //select[@id='customer-feedback-start-form-babblingCharacterization']/option 
-    ${options_length}=    Get Length    ${list_options} 
-    ${random_index}=    Random Int    1    ${options_length - 1} 
-    Select From List By Index    customer-feedback-start-form-babblingCharacterization    ${random_index} 
+    Input Text When Element Is Visible    ${locator-customer-feedback-start-form-description}    ${argRes-description} 
+    Input Text When Element Is Visible    ${locator-customer-feedback-start-form-date}    ${argRes-date} 
+    Click Element When Visible    ${locator-customer-feedback-start-form-babblingCharacterization.type} 
+    IF    '${argRes-babblingCharacterization.type}'=='blindExecutionSelection'
+        ${list_options}=    Get WebElements    //select[@id='${locator-customer-feedback-start-form-babblingCharacterization.type}']/option 
+        ${options_length}=    Get Length    ${list_options} 
+        ${random_index}=    Random Int    1    ${options_length - 1} 
+        Select From List By Index    ${locator-customer-feedback-start-form-babblingCharacterization.type}    ${random_index} 
+    ELSE 
+        Click Element When Visible     //option[@value='[object Object]'][contains(.,'${argRes-babblingCharacterization.type}')]  
+    END 
 
 The user submits RequestForm
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    save-entity 
 
 The user is in TaskAcknowledge
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskAcknowledge
 
-The user fills TaskAcknowledge
-    [Arguments]  
+The user fills TaskAcknowledge 
     [Documentation]  
+    [Arguments]    ${argRes-log}=${argTest-log}    ${argRes-response}=${argTest-response} 
     Wait Until Page Contains    TaskAcknowledge 
-    IF    ${faker-log} is True 
-        Wait Until Element Is Visible    task-acknowledge-log 
-        Select Checkbox    task-acknowledge-log 
-    ELSE IF    ${faker-log} is False 
-        Wait Until Element Is Visible    task-acknowledge-log 
-        Unselect Checkbox    task-acknowledge-log 
+    IF    ${argRes-log} is True 
+        Wait Until Element Is Visible    ${locator-task-acknowledge-log} 
+        Select Checkbox    ${locator-task-acknowledge-log} 
+    ELSE IF    ${argRes-log} is False 
+        Wait Until Element Is Visible    ${locator-task-acknowledge-log} 
+        Unselect Checkbox    ${locator-task-acknowledge-log} 
     END 
-    Input Text When Element Is Visible    task-acknowledge-response    ${faker-response} 
+    Input Text When Element Is Visible    ${locator-task-acknowledge-response}    ${argRes-response} 
 
 The user submits TaskAcknowledge
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 

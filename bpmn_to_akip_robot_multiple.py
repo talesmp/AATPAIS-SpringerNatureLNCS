@@ -14,7 +14,7 @@ assessment_process_models_path = current_directory+'/AssessmentProcessModels/'
 times_spent = []
 
 for apmf in os.listdir(assessment_process_models_path):
-  if apmf not in ['uncovered-process-models', 'unused-backup-process-models']:
+  if apmf not in ['uncovered-process-models', 'unused-backup']:
     start_time = time.time()
     process_folder_name = apmf
     # print('Processing: '+process_folder_name)

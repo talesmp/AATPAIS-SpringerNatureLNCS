@@ -18,8 +18,8 @@ ${locator-task-review-escalation-response}    task-review-escalation-response
 
 *** Keywords ***
 The user logs in
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Open Available Browser    maximized=true
     Go To    ${url_home}
     Click Element When Visible       account-menu__BV_toggle_
@@ -32,88 +32,92 @@ The user logs in
     Sleep    500ms
 
 The user is in MyTasks
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms
     Go To    ${url_my_tasks}
     Wait Until Element Is Visible    task-instance-heading
 
 The user is in RequestForm
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Go To    http://localhost:8080/process-definition/CustomerFeedbackProcess/init 
 
-The user fills RequestForm
-    [Arguments]  
+The user fills RequestForm 
     [Documentation]  
+    [Arguments]    ${argRes-description}=${argTest-description}    ${argRes-date}=${argTest-date}    ${argRes-babblingCharacterization.type}=${argTest-babblingCharacterization.type} 
     Wait Until Page Contains    Create or edit a 
-    Input Text When Element Is Visible    customer-feedback-start-form-description    ${faker-description} 
-    Input Text When Element Is Visible    customer-feedback-start-form-date    ${faker-date} 
-    Click Element When Visible    customer-feedback-start-form-babblingCharacterization 
-    ${list_options}=    Get WebElements    //select[@id='customer-feedback-start-form-babblingCharacterization']/option 
-    ${options_length}=    Get Length    ${list_options} 
-    ${random_index}=    Random Int    1    ${options_length - 1} 
-    Select From List By Index    customer-feedback-start-form-babblingCharacterization    ${random_index} 
+    Input Text When Element Is Visible    ${locator-customer-feedback-start-form-description}    ${argRes-description} 
+    Input Text When Element Is Visible    ${locator-customer-feedback-start-form-date}    ${argRes-date} 
+    Click Element When Visible    ${locator-customer-feedback-start-form-babblingCharacterization.type} 
+    IF    '${argRes-babblingCharacterization.type}'=='blindExecutionSelection'
+        ${list_options}=    Get WebElements    //select[@id='${locator-customer-feedback-start-form-babblingCharacterization.type}']/option 
+        ${options_length}=    Get Length    ${list_options} 
+        ${random_index}=    Random Int    1    ${options_length - 1} 
+        Select From List By Index    ${locator-customer-feedback-start-form-babblingCharacterization.type}    ${random_index} 
+    ELSE 
+        Click Element When Visible     //option[@value='[object Object]'][contains(.,'${argRes-babblingCharacterization.type}')]  
+    END 
 
 The user submits RequestForm
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    save-entity 
 
 The user is in TaskAnalyseComplaint
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskAnalyseComplaint
 
-The user fills TaskAnalyseComplaint
-    [Arguments]  
+The user fills TaskAnalyseComplaint 
     [Documentation]  
+    [Arguments]    ${argRes-gravity}=${argTest-gravity}    ${argRes-log}=${argTest-log}    ${argRes-response}=${argTest-response} 
     Wait Until Page Contains    TaskAnalyseComplaint 
-    Input Text When Element Is Visible    task-analyse-complaint-gravity    ${faker-gravity} 
-    IF    ${faker-log} is True 
-        Wait Until Element Is Visible    task-analyse-complaint-log 
-        Select Checkbox    task-analyse-complaint-log 
-    ELSE IF    ${faker-log} is False 
-        Wait Until Element Is Visible    task-analyse-complaint-log 
-        Unselect Checkbox    task-analyse-complaint-log 
+    Input Text When Element Is Visible    ${locator-task-analyse-complaint-gravity}    ${argRes-gravity} 
+    IF    ${argRes-log} is True 
+        Wait Until Element Is Visible    ${locator-task-analyse-complaint-log} 
+        Select Checkbox    ${locator-task-analyse-complaint-log} 
+    ELSE IF    ${argRes-log} is False 
+        Wait Until Element Is Visible    ${locator-task-analyse-complaint-log} 
+        Unselect Checkbox    ${locator-task-analyse-complaint-log} 
     END 
-    Input Text When Element Is Visible    task-analyse-complaint-response    ${faker-response} 
+    Input Text When Element Is Visible    ${locator-task-analyse-complaint-response}    ${argRes-response} 
 
 The user submits TaskAnalyseComplaint
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 
 
 The user is in TaskReviewEscalation
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskReviewEscalation
 
-The user fills TaskReviewEscalation
-    [Arguments]  
+The user fills TaskReviewEscalation 
     [Documentation]  
+    [Arguments]    ${argRes-log}=${argTest-log}    ${argRes-response}=${argTest-response} 
     Wait Until Page Contains    TaskReviewEscalation 
-    IF    ${faker-log} is True 
-        Wait Until Element Is Visible    task-review-escalation-log 
-        Select Checkbox    task-review-escalation-log 
-    ELSE IF    ${faker-log} is False 
-        Wait Until Element Is Visible    task-review-escalation-log 
-        Unselect Checkbox    task-review-escalation-log 
+    IF    ${argRes-log} is True 
+        Wait Until Element Is Visible    ${locator-task-review-escalation-log} 
+        Select Checkbox    ${locator-task-review-escalation-log} 
+    ELSE IF    ${argRes-log} is False 
+        Wait Until Element Is Visible    ${locator-task-review-escalation-log} 
+        Unselect Checkbox    ${locator-task-review-escalation-log} 
     END 
-    Input Text When Element Is Visible    task-review-escalation-response    ${faker-response} 
+    Input Text When Element Is Visible    ${locator-task-review-escalation-response}    ${argRes-response} 
 
 The user submits TaskReviewEscalation
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 

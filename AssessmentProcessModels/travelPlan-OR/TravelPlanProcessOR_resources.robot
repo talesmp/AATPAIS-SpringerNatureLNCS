@@ -21,8 +21,8 @@ ${locator-travel-plan-start-form-startDate}    travel-plan-start-form-startDate
 
 *** Keywords ***
 The user logs in
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Open Available Browser    maximized=true
     Go To    ${url_home}
     Click Element When Visible       account-menu__BV_toggle_
@@ -35,106 +35,106 @@ The user logs in
     Sleep    500ms
 
 The user is in MyTasks
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms
     Go To    ${url_my_tasks}
     Wait Until Element Is Visible    task-instance-heading
 
 The user is in StartEvent_1
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Go To    http://localhost:8080/process-definition/TravelPlanProcessOR/init 
 
-The user fills StartEvent_1
-    [Arguments]  
+The user fills StartEvent_1 
     [Documentation]  
+    [Arguments]    ${argRes-name}=${argTest-name}    ${argRes-startDate}=${argTest-startDate}    ${argRes-endDate}=${argTest-endDate}    ${argRes-rentCar}=${argTest-rentCar}    ${argRes-bookHotel}=${argTest-bookHotel} 
     Wait Until Page Contains    Create or edit a 
-    Input Text When Element Is Visible    travel-plan-start-form-name    ${faker-name} 
-    Input Text When Element Is Visible    travel-plan-start-form-startDate    ${faker-startDate} 
-    Input Text When Element Is Visible    travel-plan-start-form-endDate    ${faker-endDate} 
-    IF    ${faker-rentCar} is True 
-        Wait Until Element Is Visible    travel-plan-start-form-rentCar 
-        Select Checkbox    travel-plan-start-form-rentCar 
-    ELSE IF    ${faker-rentCar} is False 
-        Wait Until Element Is Visible    travel-plan-start-form-rentCar 
-        Unselect Checkbox    travel-plan-start-form-rentCar 
+    Input Text When Element Is Visible    ${locator-travel-plan-start-form-name}    ${argRes-name} 
+    Input Text When Element Is Visible    ${locator-travel-plan-start-form-startDate}    ${argRes-startDate} 
+    Input Text When Element Is Visible    ${locator-travel-plan-start-form-endDate}    ${argRes-endDate} 
+    IF    ${argRes-rentCar} is True 
+        Wait Until Element Is Visible    ${locator-travel-plan-start-form-rentCar} 
+        Select Checkbox    ${locator-travel-plan-start-form-rentCar} 
+    ELSE IF    ${argRes-rentCar} is False 
+        Wait Until Element Is Visible    ${locator-travel-plan-start-form-rentCar} 
+        Unselect Checkbox    ${locator-travel-plan-start-form-rentCar} 
     END 
-    IF    ${faker-bookHotel} is True 
-        Wait Until Element Is Visible    travel-plan-start-form-bookHotel 
-        Select Checkbox    travel-plan-start-form-bookHotel 
-    ELSE IF    ${faker-bookHotel} is False 
-        Wait Until Element Is Visible    travel-plan-start-form-bookHotel 
-        Unselect Checkbox    travel-plan-start-form-bookHotel 
+    IF    ${argRes-bookHotel} is True 
+        Wait Until Element Is Visible    ${locator-travel-plan-start-form-bookHotel} 
+        Select Checkbox    ${locator-travel-plan-start-form-bookHotel} 
+    ELSE IF    ${argRes-bookHotel} is False 
+        Wait Until Element Is Visible    ${locator-travel-plan-start-form-bookHotel} 
+        Unselect Checkbox    ${locator-travel-plan-start-form-bookHotel} 
     END 
 
 The user submits StartEvent_1
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    save-entity 
 
 The user is in TaskCar
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskCar
 
-The user fills TaskCar
-    [Arguments]  
+The user fills TaskCar 
     [Documentation]  
+    [Arguments]    ${argRes-carCompanyName}=${argTest-carCompanyName}    ${argRes-carBookingNumber}=${argTest-carBookingNumber} 
     Wait Until Page Contains    TaskCar 
-    Input Text When Element Is Visible    task-rent-a-car-carCompanyName    ${faker-carCompanyName} 
-    Input Text When Element Is Visible    task-rent-a-car-carBookingNumber    ${faker-carBookingNumber} 
+    Input Text When Element Is Visible    ${locator-task-rent-a-car-carCompanyName}    ${argRes-carCompanyName} 
+    Input Text When Element Is Visible    ${locator-task-rent-a-car-carBookingNumber}    ${argRes-carBookingNumber} 
 
 The user submits TaskCar
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 
 
 The user is in TaskFlight
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskFlight
 
-The user fills TaskFlight
-    [Arguments]  
+The user fills TaskFlight 
     [Documentation]  
+    [Arguments]    ${argRes-airlineCompanyName}=${argTest-airlineCompanyName}    ${argRes-airlineTicketNumber}=${argTest-airlineTicketNumber} 
     Wait Until Page Contains    TaskFlight 
-    Input Text When Element Is Visible    task-buy-flight-tickets-airlineCompanyName    ${faker-airlineCompanyName} 
-    Input Text When Element Is Visible    task-buy-flight-tickets-airlineTicketNumber    ${faker-airlineTicketNumber} 
+    Input Text When Element Is Visible    ${locator-task-buy-flight-tickets-airlineCompanyName}    ${argRes-airlineCompanyName} 
+    Input Text When Element Is Visible    ${locator-task-buy-flight-tickets-airlineTicketNumber}    ${argRes-airlineTicketNumber} 
 
 The user submits TaskFlight
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 
 
 The user is in TaskHotel
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Click Element If Visible    xpath:/html[1]/body[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[12]/div[1]/button[1]  
     Wait Until Page Contains    TaskHotel
 
-The user fills TaskHotel
-    [Arguments]  
+The user fills TaskHotel 
     [Documentation]  
+    [Arguments]    ${argRes-hotelName}=${argTest-hotelName}    ${argRes-hotelBookingNumber}=${argTest-hotelBookingNumber} 
     Wait Until Page Contains    TaskHotel 
-    Input Text When Element Is Visible    task-book-a-hotel-hotelName    ${faker-hotelName} 
-    Input Text When Element Is Visible    task-book-a-hotel-hotelBookingNumber    ${faker-hotelBookingNumber} 
+    Input Text When Element Is Visible    ${locator-task-book-a-hotel-hotelName}    ${argRes-hotelName} 
+    Input Text When Element Is Visible    ${locator-task-book-a-hotel-hotelBookingNumber}    ${argRes-hotelBookingNumber} 
 
 The user submits TaskHotel
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     Sleep    500ms  
     Capture Page Screenshot  
     Click Button    //button[@type='submit'][contains(.,'Complete')] 

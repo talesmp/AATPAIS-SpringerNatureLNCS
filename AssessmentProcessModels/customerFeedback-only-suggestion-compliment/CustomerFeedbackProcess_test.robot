@@ -1,5 +1,7 @@
-# Prompt Command to Execute the BlindBatch : 
+# Prompt Command to Execute the BlindBatch Test Case : 
 # robot -i TC_BlindBatch CustomerFeedbackProcess_test.robot
+# Prompt Command to Execute the Planned Test Cases with the tag "planned" : 
+# robot -i planned CustomerFeedbackProcess_test.robot
 *** Settings ***
 Library    FakerLibrary    #locale=pt_BR 
 Library    OperatingSystem 
@@ -13,8 +15,8 @@ Test Setup    kwFakerDataSetup
 
 *** Test Cases ***
 TC_BlindBatch
+    [Tags]  blind 
     ${kw_executed}=    Create List
-    kwFakerDataSetup
     kwLogin
     ${start_time}=    Get Time    epoch
     FOR    ${i}    IN RANGE    30
@@ -41,12 +43,21 @@ TC_BlindBatch
     ${end_time}=    Get Time    epoch 
     ${time_spent}=    Subtract Time From Time    ${end_time}    ${start_time}    number 
     ${json_string}=    Evaluate    json.dumps(${kw_executed}, indent=4) 
-    Create File    C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executedKeywords-customerFeedback-only-suggestion-compliment.json    ${json_string} 
-    ${data}=    Evaluate    json.loads(open("C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executedKeywords-customerFeedback-only-suggestion-compliment.json").read()) 
+    Create File    /Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executedKeywords-customerFeedback-only-suggestion-compliment.json    ${json_string} 
+    ${data}=    Evaluate    json.loads(open("/Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executedKeywords-customerFeedback-only-suggestion-compliment.json").read()) 
     ${execution_paths}=    Evaluate    [' => '.join(execution[1:-1]) for execution in $data] 
     ${execution_counts}=    Evaluate    dict(collections.Counter($execution_paths))    modules=collections 
     ${output}=  Evaluate  "{} executions of CustomerFeedbackProcess in {} seconds\\n".format(len($data), ${time_spent}) + '\\n'.join(["{} executions: {}".format(count, path) for path, count in $execution_counts.items()]) 
-    Create File    C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executionsCounter-customerFeedback-only-suggestion-compliment.txt    ${output} 
+    Create File    /Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/customerFeedback-only-suggestion-compliment/executionsCounter-customerFeedback-only-suggestion-compliment.txt    ${output} 
+
+TC_Planned 
+    # [Tags]  planned 
+    [Documentation]  Arrange the following Keywords below according to the desired test path, always interpolating with the kwMyTasks keyword:
+    kwLogin
+    kwFakerDataSetup
+    kwRequestForm
+    # kwMyTasks 
+    # kwTaskAcknowledge
 
 *** Keywords ***
 kwFindFirstAvailableTask
@@ -81,30 +92,33 @@ kwFakerDataSetup
     Set Test Variable    ${faker-description}
     ${faker-response}    FakerLibrary.Sentence  nb_words=8
     Set Test Variable    ${faker-response}
+    ### The elements for the selectable options should be placed here, with 'blindExecutionSelection' being the default for Blind Execution 
+    ${faker-babblingCharacterization.type}    FakerLibrary.Random Element    elements=['blindExecutionSelection'] 
+    Set Test Variable    ${faker-babblingCharacterization.type}
     ${processRunning}=    Set Variable    ${True}
     Set Test Variable    ${processRunning}
 
 kwLogin
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     The user logs in
 
 kwMyTasks
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     The user is in MyTasks
 
 kwRequestForm
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-description}=${faker-description}    ${argTest-date}=${faker-date}    ${argTest-babblingCharacterization.type}=${faker-babblingCharacterization.type} 
     The user is in RequestForm
-    The user fills RequestForm
+    The user fills RequestForm    ${argTest-description}    ${argTest-date}    ${argTest-babblingCharacterization.type} 
     The user submits RequestForm
 
 kwTaskAcknowledge
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-log}=${faker-log}    ${argTest-response}=${faker-response} 
     The user is in TaskAcknowledge
-    The user fills TaskAcknowledge
+    The user fills TaskAcknowledge    ${argTest-log}    ${argTest-response} 
     The user submits TaskAcknowledge
 

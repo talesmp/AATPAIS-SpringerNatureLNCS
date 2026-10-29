@@ -1,5 +1,7 @@
-# Prompt Command to Execute the BlindBatch : 
+# Prompt Command to Execute the BlindBatch Test Case : 
 # robot -i TC_BlindBatch TravelPlanProcessAND_test.robot
+# Prompt Command to Execute the Planned Test Cases with the tag "planned" : 
+# robot -i planned TravelPlanProcessAND_test.robot
 *** Settings ***
 Library    FakerLibrary    #locale=pt_BR 
 Library    OperatingSystem 
@@ -13,8 +15,8 @@ Test Setup    kwFakerDataSetup
 
 *** Test Cases ***
 TC_BlindBatch
+    [Tags]  blind 
     ${kw_executed}=    Create List
-    kwFakerDataSetup
     kwLogin
     ${start_time}=    Get Time    epoch
     FOR    ${i}    IN RANGE    30
@@ -49,12 +51,25 @@ TC_BlindBatch
     ${end_time}=    Get Time    epoch 
     ${time_spent}=    Subtract Time From Time    ${end_time}    ${start_time}    number 
     ${json_string}=    Evaluate    json.dumps(${kw_executed}, indent=4) 
-    Create File    C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/travelPlan-AND/executedKeywords-travelPlan-AND.json    ${json_string} 
-    ${data}=    Evaluate    json.loads(open("C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/travelPlan-AND/executedKeywords-travelPlan-AND.json").read()) 
+    Create File    /Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/travelPlan-AND/executedKeywords-travelPlan-AND.json    ${json_string} 
+    ${data}=    Evaluate    json.loads(open("/Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/travelPlan-AND/executedKeywords-travelPlan-AND.json").read()) 
     ${execution_paths}=    Evaluate    [' => '.join(execution[1:-1]) for execution in $data] 
     ${execution_counts}=    Evaluate    dict(collections.Counter($execution_paths))    modules=collections 
     ${output}=  Evaluate  "{} executions of TravelPlanProcessAND in {} seconds\\n".format(len($data), ${time_spent}) + '\\n'.join(["{} executions: {}".format(count, path) for path, count in $execution_counts.items()]) 
-    Create File    C:/Users/tales/LocalDocuments/Development/aat4pais/AssessmentProcessModels/travelPlan-AND/executionsCounter-travelPlan-AND.txt    ${output} 
+    Create File    /Users/talesmp/Documents/Development/githubPersonal/AATPAIS-SpringerNatureLNCS/AssessmentProcessModels/travelPlan-AND/executionsCounter-travelPlan-AND.txt    ${output} 
+
+TC_Planned 
+    # [Tags]  planned 
+    [Documentation]  Arrange the following Keywords below according to the desired test path, always interpolating with the kwMyTasks keyword:
+    kwLogin
+    kwFakerDataSetup
+    kwStartEvent_1
+    # kwMyTasks 
+    # kwTaskCar
+    # kwMyTasks 
+    # kwTaskFlight
+    # kwMyTasks 
+    # kwTaskHotel
 
 *** Keywords ***
 kwFindFirstAvailableTask
@@ -81,62 +96,62 @@ kwFindFirstAvailableTask
 
 kwFakerDataSetup
     [Documentation]  FakerLibrary doc: https://marketsquare.github.io/robotframework-faker/ 
-    ${faker-endDate}    FakerLibrary.Date
-    Set Test Variable    ${faker-endDate}
     ${faker-startDate}    FakerLibrary.Date
     Set Test Variable    ${faker-startDate}
+    ${faker-endDate}    FakerLibrary.Date
+    Set Test Variable    ${faker-endDate}
+    ${faker-hotelBookingNumber}    FakerLibrary.Sentence  nb_words=8
+    Set Test Variable    ${faker-hotelBookingNumber}
+    ${faker-carCompanyName}    FakerLibrary.Sentence  nb_words=8
+    Set Test Variable    ${faker-carCompanyName}
+    ${faker-airlineTicketNumber}    FakerLibrary.Sentence  nb_words=8
+    Set Test Variable    ${faker-airlineTicketNumber}
+    ${faker-airlineCompanyName}    FakerLibrary.Sentence  nb_words=8
+    Set Test Variable    ${faker-airlineCompanyName}
     ${faker-hotelName}    FakerLibrary.Sentence  nb_words=8
     Set Test Variable    ${faker-hotelName}
     ${faker-name}    FakerLibrary.Sentence  nb_words=8
     Set Test Variable    ${faker-name}
     ${faker-carBookingNumber}    FakerLibrary.Sentence  nb_words=8
     Set Test Variable    ${faker-carBookingNumber}
-    ${faker-airlineCompanyName}    FakerLibrary.Sentence  nb_words=8
-    Set Test Variable    ${faker-airlineCompanyName}
-    ${faker-airlineTicketNumber}    FakerLibrary.Sentence  nb_words=8
-    Set Test Variable    ${faker-airlineTicketNumber}
-    ${faker-carCompanyName}    FakerLibrary.Sentence  nb_words=8
-    Set Test Variable    ${faker-carCompanyName}
-    ${faker-hotelBookingNumber}    FakerLibrary.Sentence  nb_words=8
-    Set Test Variable    ${faker-hotelBookingNumber}
     ${processRunning}=    Set Variable    ${True}
     Set Test Variable    ${processRunning}
 
 kwLogin
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     The user logs in
 
 kwMyTasks
-    [Arguments]  
     [Documentation]  
+    [Arguments]  
     The user is in MyTasks
 
 kwStartEvent_1
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-name}=${faker-name}    ${argTest-startDate}=${faker-startDate}    ${argTest-endDate}=${faker-endDate} 
     The user is in StartEvent_1
-    The user fills StartEvent_1
+    The user fills StartEvent_1    ${argTest-name}    ${argTest-startDate}    ${argTest-endDate} 
     The user submits StartEvent_1
 
 kwTaskCar
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-carCompanyName}=${faker-carCompanyName}    ${argTest-carBookingNumber}=${faker-carBookingNumber} 
     The user is in TaskCar
-    The user fills TaskCar
+    The user fills TaskCar    ${argTest-carCompanyName}    ${argTest-carBookingNumber} 
     The user submits TaskCar
 
 kwTaskFlight
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-airlineCompanyName}=${faker-airlineCompanyName}    ${argTest-airlineTicketNumber}=${faker-airlineTicketNumber} 
     The user is in TaskFlight
-    The user fills TaskFlight
+    The user fills TaskFlight    ${argTest-airlineCompanyName}    ${argTest-airlineTicketNumber} 
     The user submits TaskFlight
 
 kwTaskHotel
-    [Arguments]  
     [Documentation]  
+    [Arguments]    ${argTest-hotelName}=${faker-hotelName}    ${argTest-hotelBookingNumber}=${faker-hotelBookingNumber} 
     The user is in TaskHotel
-    The user fills TaskHotel
+    The user fills TaskHotel    ${argTest-hotelName}    ${argTest-hotelBookingNumber} 
     The user submits TaskHotel
 
